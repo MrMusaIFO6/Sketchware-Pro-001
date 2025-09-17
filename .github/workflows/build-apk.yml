@@ -3,7 +3,7 @@ name: Build APK
 on:
   push:
     branches:
-      - main   # বা যেই ব্রাঞ্চে push করবেন
+      - main  # আপনার ব্রাঞ্চ নাম
 
 jobs:
   build:
@@ -19,21 +19,14 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Cache Gradle packages
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper/
-        key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          gradle-
+    - name: Make Gradlew executable
+      run: chmod +x ./gradlew
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: app-debug-apk
         path: app/build/outputs/apk/debug/app-debug.apk
